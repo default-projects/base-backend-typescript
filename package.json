@@ -47,7 +47,6 @@
         "@types/bcrypt": "^5.0.0",
         "@types/chai": "^4.3.4",
         "@types/cors": "^2.8.13",
-        "@types/ethereum-checksum-address": "^0.0.0",
         "@types/express": "^4.17.15",
         "@types/jsonwebtoken": "^8.5.9",
         "@types/keccak": "^3.0.1",
