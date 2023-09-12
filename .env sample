@@ -1,4 +1,4 @@
 PORT = 
-DEBUG = true
-JWT_SECRET = default-backend
-DATABASE = mongodb://localhost:27017/default-backend
+DEBUG = 
+JWT_SECRET = 
+DATABASE = 

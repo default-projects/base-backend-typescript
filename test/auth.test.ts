@@ -11,8 +11,8 @@ describe('api-test', () => {
             // let res = await chai.request(server)
             //     .post('/api/signup/register')
             //     .send({
-            //         name: "ZengDa",
-            //         email: "zengda0501@gmail.com",
+            //         name: "",
+            //         email: "",
             //     });
 
             console.log("result :: ")

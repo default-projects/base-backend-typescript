@@ -1,15 +1,15 @@
 import express from "express";
 import cors from "cors";
-import passport from "passport"
+import passport from "passport";
 import mongoose from "mongoose";
-import bodyParser from "body-parser"
-import rateLimit from 'express-rate-limit'
+import bodyParser from "body-parser";
+import rateLimit from 'express-rate-limit';
 import fileUpload from 'express-fileupload';
 
 // External Modules
 import './subscribe/events'
 import { Routes } from "./Routes";
-import setlog from "./utils/setlog";
+import { setlog } from "./utils/setlog";
 import config from './config/config';
 import { setupSocketServer } from "./socketServer";
 

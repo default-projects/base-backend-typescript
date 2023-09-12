@@ -2,11 +2,13 @@ import jwt from "jsonwebtoken";
 import { Response, Request, NextFunction } from "express";
 
 import { Now } from "../../utils";
-import setlog from "../../utils/setlog";
+import { setlog } from "../../utils/setlog";
 import config from '../../config/config';
 
-import authDatas from "../data-access";
 import authService from "../services";
+import authDatas from "../data-access";
+import { AuthError, ValidateError } from "../../@types/customError";
+import { getErrorCode } from "../../utils/platform";
 
 const authController = {
   // check auth token
@@ -17,12 +19,12 @@ const authController = {
   // This function is for signing up a new user.
   signup: async (req: any, res: Response) => {
     try {
-      const { name, email, address } = req.body
+      const { name, email, address } = req.body;
 
       // service
-      const existsMail = await authService.checkExistOfAccount({ name, email, address })
+      const existsMail = await authService.checkExistOfAccount({ name, email, address });
       if (existsMail.res === true) {
-        throw new Error(`${existsMail.param} is already exist!`)
+        throw new ValidateError(`${existsMail.param} is already exist!`);
       }
 
       // data access
@@ -34,17 +36,11 @@ const authController = {
         lasttime: Now(),
       });
 
-      return res.status(200).json({
-        status: true,
-        message: "success"
-      })
+      return res.status(200).json({ message: "success" });
     } catch (err) {
-      setlog("request", err)
-
-      return res.status(200).send({
-        status: false,
-        message: err.message || "internal error"
-      })
+      setlog("signup::", err);
+      const { errCode, errMsg } = getErrorCode(err);
+      return res.status(errCode).send({ message: errMsg });
     }
   },
 
@@ -58,10 +54,7 @@ const authController = {
       });
 
       if (!authInfo) {
-        return res.status(200).send({
-          status: false,
-          message: "No exists user."
-        });
+        throw new ValidateError("Invalid User Address!");
       }
 
       // data access
@@ -80,17 +73,11 @@ const authController = {
         update: { lasttime: Now() }
       })
 
-      return res.status(200).json({
-        status: true,
-        message: "success", token
-      });
+      return res.status(200).json({ token });
     } catch (err) {
-      setlog("request", err);
-
-      res.status(200).send({
-        status: false,
-        message: err.message || "internal error"
-      });
+      setlog("login::", err);
+      const { errCode, errMsg } = getErrorCode(err);
+      return res.status(errCode).send({ message: errMsg });
     }
   },
 
@@ -100,13 +87,14 @@ const authController = {
 
       jwt.verify(token, config.JWT_SECRET,
         async (err: any, userData: any) => {
-          if (err) return res.sendStatus(403);
-          const user = await authDatas.AuthDB.find({
+          if (err) throw new AuthError("Invalid Token!");
+
+          const user = await authDatas.AuthDB.findOne({
             filter: { email: userData.email },
           });
 
-          if (user.length == 0) {
-            return res.sendStatus(403);
+          if (!user) {
+            throw new ValidateError("Invalid User Address!");
           }
 
           req.user = {
@@ -124,9 +112,9 @@ const authController = {
         }
       );
     } catch (err: any) {
-      if (err) {
-        return res.sendStatus(403);
-      }
+      setlog("middleware::", err);
+      const { errCode, errMsg } = getErrorCode(err);
+      return res.status(errCode).send({ message: errMsg });
     }
   }
 }

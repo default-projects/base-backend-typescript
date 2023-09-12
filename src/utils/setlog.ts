@@ -1,44 +1,34 @@
 import * as fs from "fs";
 import colors from "colors";
 
-const setlog = function (title: string, msg?: any, noWrite?: boolean) {
+function getFileName() {
+	const date = new Date()
+	const tempYear = date.getUTCFullYear()
+	const tempDate = ("0" + date.getUTCDate()).slice(-2)
+	const tempMonth = ("0" + (date.getUTCMonth() + 1)).slice(-2)
+	const tempName = [tempYear, tempDate, tempMonth].join('-') + '.log'
+
+	return __dirname + "/../../logs/" + tempName
+}
+
+function getLogContent(title: string, msg?: string, show?: boolean) {
 	const date = new Date();
-	const datetext: string = [
-		date.getUTCFullYear(),
-		("0" + (date.getUTCMonth() + 1)).slice(-2),
-		("0" + date.getUTCDate()).slice(-2),
-	].join("-");
-	const timetext: string = [
-		("0" + date.getUTCHours()).slice(-2),
-		("0" + date.getUTCMinutes()).slice(-2),
-		("0" + date.getUTCSeconds()).slice(-2),
-	].join(":");
-	let isError = false;
-	if (msg && msg.message && msg.stack) {
-		if (msg.code === "NETWORK_ERROR" || msg.code === "EAI_AGAIN") {
-			msg = "could not detect network";
-		} else {
-			msg = msg.stack || msg.message;
-		}
-		isError = true;
-	}
-	if (msg)
-		msg = msg
-			.split(/\r\n|\r|\n/g)
-			.map((v: any) => "\t" + String(v))
-			.join("\r\n");
+	const tempHour = ("0" + date.getUTCHours()).slice(-2)
+	const tempMinutes = ("0" + date.getUTCMinutes()).slice(-2)
+	const tempSeconds = ("0" + date.getUTCSeconds()).slice(-2)
+	const tempTime = [tempHour, tempMinutes, tempSeconds].join(':')
 
-	if (!noWrite)
-		fs.appendFileSync(
-			__dirname + "/../../logs/" + datetext + ".log",
-			`[${timetext}] ${title}\r\n${msg ? msg + "\r\n" : ""}`
-		);
-	if (msg && isError) msg = colors.red(msg);
-	console.log(
-		colors.gray("[" + timetext + "]"),
-		colors.white(title),
-		msg ? "\r\n" + msg : ""
-	);
-};
+	// if (!!show) {}
+	const logTitle = colors.white(title)
+	const logTime = colors.gray("[" + tempTime + "]")
+	const logMessage = msg ? ": " + colors.red(msg) : ''
+	console.log(logTime, logTitle, logMessage)
 
-export default setlog;
+	return `[${tempTime}] ${title}\r\n${msg ? msg + "\r\n" : ""}`
+}
+
+const setlog = function (title: string, msg?: string, show?: boolean) {
+	fs.appendFileSync(getFileName(), getLogContent(title, msg, !!show))
+}
+
+export { setlog }

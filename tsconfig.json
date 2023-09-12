@@ -5,10 +5,9 @@
             "es6",
             "es2017",
             "es2020",
-            "es2022",
             "dom"
         ],
-        "target": "es2022",
+        "target": "es2020",
         "module": "commonjs",
         "moduleResolution": "node",
         "outDir": "./dist",

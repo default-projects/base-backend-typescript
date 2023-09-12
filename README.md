@@ -3,13 +3,13 @@
 ### Install Dependencies
 
 ```bash
-yarn install
+npm install
 ```
 
 ### Run
 Make "logs" folder in root directory.
 ```bash
-yarn dev
+npm run dev
 ```
 
 ## Deploy 

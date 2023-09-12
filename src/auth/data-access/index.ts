@@ -1,3 +1,4 @@
+import { DatabaseError } from "../../@types/customError";
 import AuthModels from "../models";
 
 const AuthDB = {
@@ -5,7 +6,7 @@ const AuthDB = {
     const newData = new AuthModels.Auth(data);
     const saveData = await newData.save();
     if (!saveData) {
-      throw new Error("AuthDB Database Error");
+      throw new DatabaseError("AuthDB Database Error");
     }
     return saveData;
   },
