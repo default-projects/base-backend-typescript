@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import passport from "passport";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import rateLimit from 'express-rate-limit';
@@ -46,9 +45,6 @@ app.use(bodyParser.json());
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 }
 }));
-
-// Passport middleware
-app.use(passport.initialize());
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
