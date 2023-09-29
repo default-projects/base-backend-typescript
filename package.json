@@ -11,8 +11,7 @@
         "watch": "nodemon  -e ts -w src -x npm run watch:serve",
         "watch:serve": "tsc && node dist/app.js",
         "build": "npm run clean && tsc",
-        "test": "mocha --require ts-node/register test/*.ts",
-        "authTest": "mocha --require ts-node/register test/platform.test.ts"
+        "test": "mocha --require ts-node/register test/*.ts"
     },
     "dependencies": {
         "@types/socket.io": "^3.0.2",
